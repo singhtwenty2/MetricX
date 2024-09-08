@@ -1,0 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:ital,wght@1,300&family=Playball&family=Poppins:ital,wght@0,100;0,300;0,400;0,600;0,700;1,200;1,600&family=Raleway:wght@100&family=Roboto:ital,wght@0,100;1,100&family=Style+Script&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "Poppins", sans-serif;
+  color-scheme: dark;
+
+  background: linear-gradient(to right, #040c13, #161717);
+  /* color-scheme: light dark; */
+  /* color-scheme: light; */
+}
+
+.slick-slide > div {
+  margin: 0 10px;
+}
+/* used for testimonial /rating */

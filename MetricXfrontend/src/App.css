@@ -1,0 +1,10 @@
+:root {
+  --primary-color: #2659e4;
+  --secondary-color: #101019;
+  --switch-padding: 4px;
+  --slider-bg-clr: var(--primary-color);
+  --slider-bg-clr-on: var(--primary-color);
+  --slider-text-clear: #fff;
+  --label-padding: 0.7rem 2rem;
+  --switch-easing: cubic-bezier(0.47, 1.67, 0.41, 0.8);
+}

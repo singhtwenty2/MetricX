@@ -1,0 +1,10 @@
+.DOC {
+  font-size: 1.5em;
+  color: #fff;
+  text-shadow: 2px 2px 4px #000;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.DOC:hover {
+  text-shadow: 2px 2px 6px #ff6600b7;
+}
