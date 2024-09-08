@@ -37,5 +37,4 @@ out/
 
 ### SECRET ###
 application.properties
-application.yaml
 .env
