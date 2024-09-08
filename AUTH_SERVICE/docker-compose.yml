@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: metricx_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - metricx_network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ktor-app
+    ports:
+      - "9707:9707"
+    environment:
+      KTOR_DATABASE_URL: jdbc:postgresql://db:5432/metricx_db
+      KTOR_DATABASE_USER: postgres
+      KTOR_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_DOMAIN: ${JWT_DOMAIN}
+      JWT_AUDIENCE: ${JWT_AUDIENCE}
+      JWT_REALM: ${JWT_REALM}
+    depends_on:
+      - db
+    networks:
+      - metricx_network
+    command: ["sh", "-c", "while ! nc -z db 5432; do sleep 1; done; java -jar /app/app.jar"]
+
+volumes:
+  postgres_data:
+
+networks:
+  metricx_network:
+    driver: bridge
