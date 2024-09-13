@@ -50,4 +50,8 @@ class KycService(
     fun deleteKycDetails(): Boolean {
         return kycDao.deleteKycDetails()
     }
+
+    fun getKycStatus(userId: String): Boolean {
+        return kycDao.getKycStatus(userId)
+    }
 }

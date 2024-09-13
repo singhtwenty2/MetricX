@@ -16,7 +16,7 @@ group = "example.com"
 version = "0.0.1"
 
 application {
-    mainClass.set("example.com.ApplicationKt")
+    mainClass.set("io.ktor.server.netty.EngineMain")
 }
 
 repositories {
@@ -45,11 +45,14 @@ dependencies {
     implementation("io.ktor:ktor-server-config-yaml")
     testImplementation("io.ktor:ktor-server-test-host-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
-
     // Hashing
     implementation("commons-codec:commons-codec:$commons_codec_version")
     // Sendgrid email client
     implementation("com.sendgrid:sendgrid-java:4.7.4")
+    // DotEnv
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+    // JDBC connector
+    runtimeOnly("mysql:mysql-connector-java:8.0.28")
 }
 
 tasks.jar {

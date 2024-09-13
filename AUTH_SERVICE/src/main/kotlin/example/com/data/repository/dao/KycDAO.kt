@@ -6,12 +6,14 @@ import example.com.util.RecordCreationErrorHandler
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.*
 
 object KycDAO {
     fun insertKycDetails(dto: InternalKycDTO): RecordCreationErrorHandler {
         return transaction {
+            val userIdAsUUID = UUID.fromString(dto.userId)!!
             try {
-                val existingRecord = KYC.selectAll().where { KYC.userId eq dto.userId.toInt() }.singleOrNull()
+                val existingRecord = KYC.selectAll().where { KYC.userId eq userIdAsUUID }.singleOrNull()
                 if (existingRecord != null) {
                     return@transaction RecordCreationErrorHandler
                         .AlreadyExists(
@@ -19,7 +21,7 @@ object KycDAO {
                         )
                 } else {
                     KYC.insert {
-                        it[userId] = dto.userId.toInt()
+                        it[userId] = userIdAsUUID
                         it[first_name] = dto.firstName
                         it[last_name] = dto.lastName
                         it[role] = dto.role
@@ -48,8 +50,9 @@ object KycDAO {
 
     fun getKycDetails(userId: String): InternalKycDTO {
         return transaction {
+            val userIdAsUUID = UUID.fromString(userId)!!
             val kyc = KYC.selectAll().where {
-                KYC.userId eq userId.toInt()
+                KYC.userId eq userIdAsUUID
             }.singleOrNull()
             kyc?.let {
                 return@transaction InternalKycDTO(
@@ -72,6 +75,16 @@ object KycDAO {
                 createdAt = "",
                 updatedAt = ""
             )
+        }
+    }
+
+    fun getKycStatus(userId: String): Boolean {
+        return transaction {
+            val userIdAsUUID = UUID.fromString(userId)!!
+            val kyc = KYC.selectAll().where {
+                KYC.userId eq userIdAsUUID
+            }.singleOrNull()
+            return@transaction kyc != null
         }
     }
 

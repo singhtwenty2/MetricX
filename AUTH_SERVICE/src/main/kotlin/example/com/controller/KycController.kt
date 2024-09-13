@@ -3,6 +3,8 @@ package example.com.controller
 import example.com.data.dto.internal.InternalKycDTO
 import example.com.data.dto.request.KycDTO
 import example.com.data.dto.response.KycResponseDTO
+import example.com.data.dto.response.KycStatusDTO
+import example.com.data.dto.response.MessageDTO
 import example.com.service.KycService
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -26,7 +28,12 @@ class KycController(
                 request.companyName.isBlank() ||
                 request.teamSize.isBlank()
             ) {
-                call.respond(HttpStatusCode.BadRequest, "Invalid request")
+                call.respond(
+                    status = HttpStatusCode.BadRequest,
+                    message = MessageDTO(
+                        errorMessage = "Invalid request. Please provide all the required fields"
+                    )
+                )
                 return
             }
             val isKycSuccessful = kycService.insertKycDetails(
@@ -42,9 +49,19 @@ class KycController(
                 )
             )
             if (isKycSuccessful) {
-                call.respond(HttpStatusCode.Created, "KYC details inserted successfully")
+                call.respond(
+                    status = HttpStatusCode.Created,
+                    message = MessageDTO(
+                        successMessage = "KYC details inserted successfully"
+                    )
+                )
             } else {
-                call.respond(HttpStatusCode.InternalServerError, "Failed to insert KYC details")
+                call.respond(
+                    status = HttpStatusCode.InternalServerError,
+                    message = MessageDTO(
+                        errorMessage = "Failed to insert KYC details"
+                    )
+                )
             }
         }
     }
@@ -69,6 +86,31 @@ class KycController(
                 updatedAt = kycDetails.updatedAt
             )
             call.respond(HttpStatusCode.OK, response)
+        }
+    }
+
+    suspend fun getKycStatus(call: ApplicationCall) {
+        val principal = call.principal<JWTPrincipal>()
+        val userId = principal?.getClaim("userId", String::class)
+        userId?.let {
+            val kycStatus = kycService.getKycStatus(userId)
+            if (kycStatus) {
+                call.respond(
+                    status = HttpStatusCode.OK,
+                    message = KycStatusDTO(
+                        isKycDone = true,
+                        message = "KYC details are available"
+                    )
+                )
+            } else {
+                call.respond(
+                    status = HttpStatusCode.OK,
+                    message = KycStatusDTO(
+                        isKycDone = false,
+                        message = "KYC details are not available"
+                    )
+                )
+            }
         }
     }
 

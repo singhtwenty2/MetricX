@@ -229,7 +229,7 @@ class UserService(
             )
         }
     }
-    fun aboutMe(userId: Int): UserDTO {
+    fun aboutMe(userId: String): UserDTO {
         val result = userDao.fetchUserDetails(userId)
         if(result.isSuccess) {
             return result.getOrNull()!!

@@ -1,20 +1,21 @@
-package example.com.configs
+package example.com.config
 
 import example.com.data.repository.entity.KYC
 import example.com.data.repository.entity.Otps
 import example.com.data.repository.entity.Tokens
 import example.com.data.repository.entity.Users
+import io.github.cdimascio.dotenv.Dotenv
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureDatabase() {
-    val config = environment.config.config("ktor.database")
-    val driver = config.property("driver").getString()
-    val url = config.property("url").getString()
-    val user = config.property("user").getString()
-    val password = config.property("password").getString()
+    val dotenv = Dotenv.configure().filename(".env").load()
+    val url = dotenv["DB_URL"]
+    val driver = dotenv["DB_DRIVER"]
+    val user = dotenv["DB_USERNAME"]
+    val password = dotenv["DB_PASSWORD"]
 
     Database.connect(url, driver, user, password)
 

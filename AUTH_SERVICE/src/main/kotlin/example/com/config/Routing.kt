@@ -1,7 +1,8 @@
-package example.com.configs
+package example.com.config
 
 import example.com.controller.AuthController
 import example.com.controller.KycController
+import example.com.data.dto.response.MessageDTO
 import example.com.data.repository.dao.KycDAO
 import example.com.data.repository.dao.OtpDAO
 import example.com.data.repository.dao.TokenDAO
@@ -48,11 +49,16 @@ fun Application.configureRouting() {
     kycRoutes(kycController)
     routing {
         get("/") {
-            call.respondText("Hello, I Am On!")
+            call.respond(
+                HttpStatusCode.OK,
+                MessageDTO(successMessage = "Hello, I Am On!")
+            )
         }
-        // Health Route.
         get("/health") {
-            call.respondText("Hello, I am alive!")
+            call.respond(
+                HttpStatusCode.OK,
+                MessageDTO(successMessage = "Hello, I Am Alive!")
+            )
         }
     }
 }

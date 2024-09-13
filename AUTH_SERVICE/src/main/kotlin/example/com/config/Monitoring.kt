@@ -1,4 +1,4 @@
-package example.com.configs
+package example.com.config
 
 import io.ktor.server.application.*
 import io.ktor.server.plugins.callloging.*

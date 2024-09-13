@@ -4,6 +4,7 @@ import example.com.data.dto.request.LoginDTO
 import example.com.data.dto.request.RefreshTokenDTO
 import example.com.data.dto.request.SignupDTO
 import example.com.data.dto.request.VerifyOtpDTO
+import example.com.data.dto.response.MessageDTO
 import example.com.data.dto.response.TokenResponseDTO
 import example.com.service.UserService
 import io.ktor.http.*
@@ -24,18 +25,35 @@ class AuthController(
         ) {
             call
                 .respond(
-                    HttpStatusCode.BadRequest,
-                    "Invalid request. Please provide all the required fields"
+                    status = HttpStatusCode.BadRequest,
+                    message = MessageDTO(
+                        errorMessage = "Invalid request. Please provide all the required fields"
+                    )
                 )
         }
         try {
             val isAccountCreated = userService.createUser(request)
             if (!isAccountCreated) {
-                call.respond(HttpStatusCode.InternalServerError, "Failed to create user")
+                call.respond(
+                    status = HttpStatusCode.InternalServerError,
+                    message = MessageDTO(
+                        errorMessage = "Failed to create user. Please try again"
+                    )
+                )
             }
-            call.respond(HttpStatusCode.OK, "OTP sent to ${request.email}. Please verify your email")
+            call.respond(
+                status = HttpStatusCode.OK,
+                message = MessageDTO(
+                    successMessage = "OTP sent to ${request.email}. Please verify your email"
+                )
+            )
         } catch (e: Exception) {
-            call.respond(HttpStatusCode.ServiceUnavailable, "Error creating user: ${e.message}")
+            call.respond(
+                status = HttpStatusCode.ServiceUnavailable,
+                message = MessageDTO(
+                    errorMessage = "Error creating user: ${e.message}"
+                )
+            )
         }
     }
 
@@ -48,18 +66,35 @@ class AuthController(
         ) {
             call
                 .respond(
-                    HttpStatusCode.BadRequest,
-                    "Invalid request. Please provide all the required fields"
+                    status = HttpStatusCode.BadRequest,
+                    message = MessageDTO(
+                        errorMessage = "Invalid request. Please provide all the required fields"
+                    )
                 )
         }
         try {
             val isOtpVerified = userService.verifyEmailWithOtpAndSaveUserDetails(request)
             if (!isOtpVerified) {
-                call.respond(HttpStatusCode.Unauthorized, "Invalid OTP")
+                call.respond(
+                    status = HttpStatusCode.Unauthorized,
+                    message = MessageDTO(
+                        errorMessage = "Failed to verify OTP. Please try again"
+                    )
+                )
             }
-            call.respond(HttpStatusCode.OK, "OTP verified successfully")
+            call.respond(
+                status = HttpStatusCode.OK,
+                message = MessageDTO(
+                    successMessage = "OTP verified successfully"
+                )
+            )
         } catch (e: Exception) {
-            call.respond(HttpStatusCode.ServiceUnavailable, "Error verifying OTP: ${e.message}")
+            call.respond(
+                status = HttpStatusCode.ServiceUnavailable,
+                message = MessageDTO(
+                    errorMessage = "Error verifying OTP: ${e.message}"
+                )
+            )
         }
     }
 
@@ -69,18 +104,33 @@ class AuthController(
             request.email.isBlank() ||
             request.password.isBlank()
         ) {
-            call.respond(HttpStatusCode.BadRequest, "Invalid request. Please provide all the required fields")
+            call.respond(
+                status = HttpStatusCode.BadRequest,
+                message = MessageDTO(
+                    errorMessage = "Invalid request. Please provide all the required fields"
+                )
+            )
             return
         }
 
         try {
             val result = userService.authenticateUser(request)
             if (!result.isUserAuthenticated) {
-                call.respond(HttpStatusCode.Unauthorized, "Invalid credentials")
+                call.respond(
+                    status = HttpStatusCode.Unauthorized,
+                    message = MessageDTO(
+                        errorMessage = "Invalid credentials. Please try again"
+                    )
+                )
                 return
             }
             if (result.accessToken == null || result.refreshToken == null) {
-                call.respond(HttpStatusCode.InternalServerError, "Failed to generate tokens. Please try again.")
+                call.respond(
+                    status = HttpStatusCode.InternalServerError,
+                    message = MessageDTO(
+                        errorMessage = "Failed to generate token. Please try again"
+                    )
+                )
                 return
             }
             call.respond(
@@ -91,19 +141,35 @@ class AuthController(
                 )
             )
         } catch (e: Exception) {
-            call.respond(HttpStatusCode.ServiceUnavailable, "Error logging in: ${e.message}")
+            call.respond(
+                status = HttpStatusCode.ServiceUnavailable,
+                message = MessageDTO(
+                    errorMessage = "Error authenticating user: ${e.message}"
+                )
+            )
         }
     }
+
     suspend fun refreshToken(call: ApplicationCall) {
         val request = call.receive<RefreshTokenDTO>()
         if (request.refreshToken.isBlank()) {
-            call.respond(HttpStatusCode.BadRequest, "Invalid request. Please provide the refresh token")
+            call.respond(
+                status = HttpStatusCode.BadRequest,
+                message = MessageDTO(
+                    errorMessage = "Invalid request. Please provide the refresh token"
+                )
+            )
             return
         }
         try {
             val result = userService.genrateRefreshToken(request.refreshToken)
             if (!result.isUserAuthenticated) {
-                call.respond(HttpStatusCode.Unauthorized, "Invalid or expired refresh token")
+                call.respond(
+                    status = HttpStatusCode.Unauthorized,
+                    message = MessageDTO(
+                        errorMessage = "Invalid or expired refresh token"
+                    )
+                )
                 return
             }
             call.respond(
@@ -114,19 +180,35 @@ class AuthController(
                 )
             )
         } catch (e: Exception) {
-            call.respond(HttpStatusCode.ServiceUnavailable, "Error refreshing token: ${e.message}")
+            call.respond(
+                status = HttpStatusCode.ServiceUnavailable,
+                message = MessageDTO(
+                    errorMessage = "Error refreshing token: ${e.message}"
+                )
+            )
         }
     }
+
     suspend fun accessToken(call: ApplicationCall) {
         val request = call.receive<RefreshTokenDTO>()
         if (request.refreshToken.isBlank()) {
-            call.respond(HttpStatusCode.BadRequest, "Invalid request. Please provide the refresh token")
+            call.respond(
+                status = HttpStatusCode.BadRequest,
+                message = MessageDTO(
+                    errorMessage = "Invalid request. Please provide the refresh token"
+                )
+            )
             return
         }
         try {
             val result = userService.generateAccessTokenFromRefreshToken(request.refreshToken)
             if (!result.isUserAuthenticated) {
-                call.respond(HttpStatusCode.Unauthorized, "Invalid or expired refresh token")
+                call.respond(
+                    status = HttpStatusCode.Unauthorized,
+                    message = MessageDTO(
+                        errorMessage = "Invalid or expired refresh token"
+                    )
+                )
                 return
             }
             call.respond(
@@ -137,9 +219,15 @@ class AuthController(
                 )
             )
         } catch (e: Exception) {
-            call.respond(HttpStatusCode.ServiceUnavailable, "Error refreshing token: ${e.message}")
+            call.respond(
+                status = HttpStatusCode.ServiceUnavailable,
+                message = MessageDTO(
+                    errorMessage = "Error generating access token: ${e.message}"
+                )
+            )
         }
     }
+
     suspend fun logout(call: ApplicationCall) {
         TODO()
     }
@@ -148,10 +236,15 @@ class AuthController(
         val principal = call.principal<JWTPrincipal>()
         val userId = principal?.getClaim("userId", String::class)
         userId?.let {
-            val user = userService.aboutMe(it.toInt())
+            val user = userService.aboutMe(it)
             call.respond(HttpStatusCode.OK, user)
         } ?: run {
-            call.respond(HttpStatusCode.BadRequest, "Invalid request. Please provide the user ID")
+            call.respond(
+                status = HttpStatusCode.BadRequest,
+                message = MessageDTO(
+                    errorMessage = "Invalid request. Please provide the required fields"
+                )
+            )
         }
     }
 

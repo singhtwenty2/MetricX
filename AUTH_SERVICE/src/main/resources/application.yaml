@@ -4,13 +4,3 @@ ktor:
       - example.com.ApplicationKt.module
   deployment:
     port: 9707
-  database:
-    driver: "org.postgresql.Driver"
-    url: "jdbc:postgresql://localhost:5432/metricx_db"
-    user: "postgres"
-    password: "aryanlovely30"
-
-jwt:
-  domain: "https://jwt-provider-domain/"
-  audience: "jwt-audience"
-  realm: "ktor sample app"

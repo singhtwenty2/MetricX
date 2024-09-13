@@ -3,7 +3,7 @@ package example.com.data.repository.entity
 import org.jetbrains.exposed.sql.Table
 
 object Users : Table() {
-    val userId = integer("user_id").autoIncrement()
+    val userId = uuid("user_id").autoGenerate()
     val email = varchar("email", 100).uniqueIndex()
     val passwordHash = varchar("password_hash", 100)
     val salt = varchar("salt", 100)

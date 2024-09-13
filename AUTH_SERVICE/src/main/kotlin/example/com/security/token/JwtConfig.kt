@@ -3,12 +3,14 @@ package example.com.security.token
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
+import io.github.cdimascio.dotenv.Dotenv
 import java.util.*
 
 object JwtConfig {
-    const val SECRET = "jwt-secret"
-    const val ISSUER = "http://0.0.0.0:9707"
-    const val AUDIENCE = "users"
+    private val dotenv = Dotenv.configure().filename(".env").load()
+    private val SECRET = dotenv["JWT_SECRET"]
+    private val ISSUER = dotenv["JWT_ISSUER"]
+    val AUDIENCE = dotenv["JWT_AUDIENCE"]
     const val TOKEN_VALIDITY = 36_000_00 * 10 // 10 hours
 
     private val algorithm = Algorithm.HMAC512(SECRET)

@@ -37,4 +37,4 @@ out/
 
 ### SECRET ###
 application.properties
-.env
+src/main/resources/.env

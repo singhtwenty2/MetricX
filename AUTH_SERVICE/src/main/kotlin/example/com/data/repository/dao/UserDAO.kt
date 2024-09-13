@@ -1,7 +1,7 @@
 package example.com.data.repository.dao
 
-import example.com.data.dto.internal.InternalUserDTO
 import example.com.data.dto.internal.InternalUserAuthenticationDetailDTO
+import example.com.data.dto.internal.InternalUserDTO
 import example.com.data.dto.response.UserDTO
 import example.com.data.repository.entity.Users
 import example.com.security.hashing.HashingService
@@ -11,6 +11,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.*
 
 class UserDAO(
     private val hashingService: HashingService
@@ -60,14 +61,10 @@ class UserDAO(
             user?.let {
                 val storedPasswordHash = it[Users.passwordHash]
                 val storedSalt = it[Users.salt]
-
-                // Create a SaltedHash object
                 val saltedHash = SaltedHash(
                     salt = storedSalt,
                     hash = storedPasswordHash
                 )
-
-                // Verify the password using the hashingService's verify method
                 val isPasswordValid = hashingService.verify(plainPassword, saltedHash)
 
                 if (isPasswordValid) {
@@ -85,12 +82,11 @@ class UserDAO(
     }
 
     fun fetchUserDetails(
-        userId: Int
+        userId: String
     ): Result<UserDTO> {
+        val userIdAsUUID = UUID.fromString(userId)
         return transaction {
-            val user = Users.select {
-                Users.userId eq userId
-            }.singleOrNull()
+            val user = Users.selectAll().where { Users.userId eq userIdAsUUID }.singleOrNull()
             user?.let {
                 Result.success(
                     UserDTO(

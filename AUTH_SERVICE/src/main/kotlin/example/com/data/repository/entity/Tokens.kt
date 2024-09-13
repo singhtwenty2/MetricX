@@ -3,9 +3,9 @@ package example.com.data.repository.entity
 import org.jetbrains.exposed.sql.Table
 
 object Tokens : Table() {
-    val tokenId = integer("token_id").autoIncrement()
-    val userId = integer("user_id").references(Users.userId)
-    val refreshToken = varchar("refreshToken", 255)
+    private val tokenId = uuid("token_id").autoGenerate()
+    val userId = uuid("user_id").references(Users.userId)
+    val refreshToken = varchar("refreshToken", 512)  // @TODO: Change the size to prevent future crashes
     val createdAt = varchar("created_at", 50)
     val expiry = varchar("expiry_at", 50)
 

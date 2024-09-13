@@ -15,8 +15,11 @@ fun Application.kycRoutes(kycController: KycController) {
                 post("/update") {
                     kycController.updateKycDetails(call)
                 }
-                get("/get") {
+                get("/fetch") {
                     kycController.getKycDetails(call)
+                }
+                get("/status") {
+                    kycController.getKycStatus(call)
                 }
             }
         }

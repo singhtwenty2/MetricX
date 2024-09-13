@@ -1,4 +1,4 @@
-package example.com.configs
+package example.com.config
 
 import example.com.security.token.JwtConfig
 import io.ktor.server.application.*

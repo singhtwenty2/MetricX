@@ -1,6 +1,6 @@
 package example.com
 
-import example.com.configs.*
+import example.com.config.*
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {

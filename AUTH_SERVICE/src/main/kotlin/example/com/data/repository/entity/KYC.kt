@@ -2,9 +2,9 @@ package example.com.data.repository.entity
 
 import org.jetbrains.exposed.sql.Table
 
-object KYC : Table(){
-    val kycId = integer("kyc_id").autoIncrement()
-    val userId = integer("user_id").references(Users.userId)
+object KYC : Table() {
+    private val kycId = uuid("kyc_id").autoGenerate()
+    val userId = uuid("user_id").references(Users.userId)
     val first_name = varchar("first_name", 50)
     val last_name = varchar("last_name", 50)
     val role = varchar("role", 50)
