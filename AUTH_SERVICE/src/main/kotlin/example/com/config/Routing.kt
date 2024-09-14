@@ -35,8 +35,8 @@ fun Application.configureRouting() {
     val tokenDao = TokenDAO
     val otpService = OtpService(emailService, otpDAO)
     val kycDao = KycDAO
-    val kycService = KycService(kycDao)
-    val kycController = KycController(kycService)
+    val kycService = KycService(kycDao, userDao)
+    val kycController = KycController(kycService, emailService)
     val userService = UserService(
         userDao = userDao,
         tokenDao = tokenDao,

@@ -24,9 +24,15 @@ object KycDAO {
                         it[userId] = userIdAsUUID
                         it[first_name] = dto.firstName
                         it[last_name] = dto.lastName
-                        it[role] = dto.role
                         it[companyName] = dto.companyName
                         it[teamSize] = dto.teamSize
+                        it[phoneNumber] = dto.phoneNumber
+                        it[jobTitle] = dto.jobTitle
+                        it[notificationPreferences] = dto.notificationPreferences
+                        it[region] = dto.region
+                        it[timeZone] = dto.timeZone
+                        it[postalCode] = dto.postalCode
+                        it[address] = dto.address
                         it[createdAt] = dto.createdAt
                         it[updatedAt] = dto.updatedAt
                     }
@@ -48,7 +54,7 @@ object KycDAO {
         TODO()
     }
 
-    fun getKycDetails(userId: String): InternalKycDTO {
+    fun getKycDetails(userId: String): InternalKycDTO? {
         return transaction {
             val userIdAsUUID = UUID.fromString(userId)!!
             val kyc = KYC.selectAll().where {
@@ -59,22 +65,19 @@ object KycDAO {
                     userId = it[KYC.userId].toString(),
                     firstName = it[KYC.first_name],
                     lastName = it[KYC.last_name],
-                    role = it[KYC.role],
                     companyName = it[KYC.companyName],
                     teamSize = it[KYC.teamSize],
                     createdAt = it[KYC.createdAt],
-                    updatedAt = it[KYC.updatedAt]
+                    jobTitle = it[KYC.jobTitle],
+                    notificationPreferences = it[KYC.notificationPreferences],
+                    region = it[KYC.region],
+                    timeZone = it[KYC.timeZone],
+                    postalCode = it[KYC.postalCode],
+                    address = it[KYC.address],
+                    updatedAt = it[KYC.updatedAt],
+                    phoneNumber = it[KYC.phoneNumber]
                 )
-            } ?: InternalKycDTO(
-                userId = "",
-                firstName = "",
-                lastName = "",
-                role = "",
-                companyName = "",
-                teamSize = "",
-                createdAt = "",
-                updatedAt = ""
-            )
+            } ?: return@transaction null
         }
     }
 

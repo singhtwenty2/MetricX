@@ -2,12 +2,14 @@ package example.com.service
 
 import example.com.data.dto.internal.InternalKycDTO
 import example.com.data.repository.dao.KycDAO
+import example.com.data.repository.dao.UserDAO
 import example.com.util.RecordCreationErrorHandler
 import java.text.SimpleDateFormat
 import java.util.*
 
 class KycService(
-    private val kycDao: KycDAO
+    private val kycDao: KycDAO,
+    private val userDao: UserDAO
 ) {
     fun insertKycDetails(request: InternalKycDTO): Boolean {
         val currentTime = System.currentTimeMillis().toString()
@@ -17,11 +19,17 @@ class KycService(
                 userId = request.userId,
                 firstName = request.firstName,
                 lastName = request.lastName,
-                role = request.role,
                 companyName = request.companyName,
                 teamSize = request.teamSize,
                 createdAt = formattedCurrentTime,
-                updatedAt = formattedCurrentTime
+                updatedAt = formattedCurrentTime,
+                phoneNumber = request.phoneNumber,
+                jobTitle = request.jobTitle,
+                notificationPreferences = request.notificationPreferences,
+                region = request.region,
+                timeZone = request.timeZone,
+                postalCode = request.postalCode,
+                address = request.address
             )
         )
         return when (isKycInserted) {
@@ -43,7 +51,7 @@ class KycService(
         return kycDao.updateKycDetails()
     }
 
-    fun getKycDetails(userId: String): InternalKycDTO {
+    fun getKycDetails(userId: String): InternalKycDTO? {
         return kycDao.getKycDetails(userId)
     }
 
@@ -53,5 +61,9 @@ class KycService(
 
     fun getKycStatus(userId: String): Boolean {
         return kycDao.getKycStatus(userId)
+    }
+
+    fun getUserEmail(userId: String): String {
+        return userDao.fetchUserEmailFromUserId(userId)
     }
 }

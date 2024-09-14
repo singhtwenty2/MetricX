@@ -32,6 +32,16 @@ class AuthController(
                 )
         }
         try {
+            val isEmailExists = userService.isEmailExists(request.email)
+            if (isEmailExists) {
+                call.respond(
+                    status = HttpStatusCode.Conflict,
+                    message = MessageDTO(
+                        errorMessage = "User with email ${request.email} already exists. Please login"
+                    )
+                )
+                return
+            }
             val isAccountCreated = userService.createUser(request)
             if (!isAccountCreated) {
                 call.respond(

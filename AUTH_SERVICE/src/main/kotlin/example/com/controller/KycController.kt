@@ -5,6 +5,7 @@ import example.com.data.dto.request.KycDTO
 import example.com.data.dto.response.KycResponseDTO
 import example.com.data.dto.response.KycStatusDTO
 import example.com.data.dto.response.MessageDTO
+import example.com.service.EmailService
 import example.com.service.KycService
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -14,19 +15,27 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 
 class KycController(
-    private val kycService: KycService
+    private val kycService: KycService,
+    private val emailService: EmailService
 ) {
     suspend fun insertKycDetails(call: ApplicationCall) {
         val principal = call.principal<JWTPrincipal>()
         val userId = principal?.getClaim("userId", String::class)
         userId?.let {
+            val userEmail = kycService.getUserEmail(userId)
             val request = call.receive<KycDTO>()
             if (
                 request.firstName.isBlank() ||
                 request.lastName.isBlank() ||
-                request.role.isBlank() ||
                 request.companyName.isBlank() ||
-                request.teamSize.isBlank()
+                request.teamSize.name.isBlank() ||
+                request.phoneNumber.isBlank() ||
+                request.jobTitle.name.isBlank() ||
+                request.notificationPreferences.name.isBlank() ||
+                request.region.name.isBlank() ||
+                request.timeZone.name.isBlank() ||
+                request.postalCode.isBlank() ||
+                request.address.isBlank()
             ) {
                 call.respond(
                     status = HttpStatusCode.BadRequest,
@@ -41,11 +50,17 @@ class KycController(
                     userId = userId,
                     firstName = request.firstName,
                     lastName = request.lastName,
-                    role = request.role,
                     companyName = request.companyName,
-                    teamSize = request.teamSize,
+                    teamSize = request.teamSize.name,
                     createdAt = "",
-                    updatedAt = ""
+                    updatedAt = "",
+                    phoneNumber = request.phoneNumber,
+                    jobTitle = request.jobTitle.name,
+                    notificationPreferences = request.notificationPreferences.name,
+                    region = request.region.name,
+                    timeZone = request.timeZone.name,
+                    postalCode = request.postalCode,
+                    address = request.address
                 )
             )
             if (isKycSuccessful) {
@@ -54,6 +69,10 @@ class KycController(
                     message = MessageDTO(
                         successMessage = "KYC details inserted successfully"
                     )
+                )
+                emailService.sendGreetingEmail(
+                    toEmail = userEmail,
+                    name = "${request.firstName} ${request.lastName}"
                 )
             } else {
                 call.respond(
@@ -75,15 +94,30 @@ class KycController(
         val userId = principal?.getClaim("userId", String::class)
         userId?.let {
             val kycDetails = kycService.getKycDetails(userId)
+            if (kycDetails == null) {
+                call.respond(
+                    status = HttpStatusCode.NotFound,
+                    message = MessageDTO(
+                        errorMessage = "KYC details not found"
+                    )
+                )
+                return
+            }
             val response = KycResponseDTO(
                 userId = kycDetails.userId,
                 firstName = kycDetails.firstName,
                 lastName = kycDetails.lastName,
-                role = kycDetails.role,
                 companyName = kycDetails.companyName,
                 teamSize = kycDetails.teamSize,
                 createdAt = kycDetails.createdAt,
-                updatedAt = kycDetails.updatedAt
+                updatedAt = kycDetails.updatedAt,
+                phoneNumber = kycDetails.phoneNumber,
+                jobTitle = kycDetails.jobTitle,
+                notificationPreferences = kycDetails.notificationPreferences,
+                region = kycDetails.region,
+                timeZone = kycDetails.timeZone,
+                postalCode = kycDetails.postalCode,
+                address = kycDetails.address
             )
             call.respond(HttpStatusCode.OK, response)
         }

@@ -7,9 +7,8 @@ import example.com.data.repository.entity.Users
 import example.com.security.hashing.HashingService
 import example.com.security.hashing.SaltedHash
 import example.com.util.RecordCreationErrorHandler
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
@@ -94,6 +93,19 @@ class UserDAO(
                     )
                 )
             } ?: Result.failure(IllegalArgumentException("User with userId $userId not found"))
+        }
+    }
+
+    fun isUserExists(email: String): Boolean {
+        return transaction {
+            Users.selectAll().where { Users.email eq email }.count() > 0
+        }
+    }
+
+    fun fetchUserEmailFromUserId(userId: String): String {
+        val userIdAsUUID = UUID.fromString(userId)
+        return transaction {
+            Users.selectAll().where { Users.userId eq userIdAsUUID }.single()[Users.email]
         }
     }
 }

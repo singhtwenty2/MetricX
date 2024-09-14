@@ -237,4 +237,8 @@ class UserService(
             throw Exception("Failed to fetch user details")
         }
     }
+
+    fun isEmailExists(email: String): Boolean {
+        return userDao.isUserExists(email)
+    }
 }
