@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.Table
 
 object KYC : Table() {
     private val kycId = uuid("kyc_id").autoGenerate()
-    val userId = uuid("user_id").references(Users.userId)
+    val userId = uuid("user_id").references(Users.userId).uniqueIndex()
     val first_name = varchar("first_name", 50)
     val last_name = varchar("last_name", 50)
     val companyName = varchar("company_name", 50)
