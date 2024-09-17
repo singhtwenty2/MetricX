@@ -4,21 +4,57 @@ import {
   Button,
   TextField,
   Box,
+  FormControl,
+  InputLabel,
   Select,
   MenuItem,
-  InputLabel,
-  FormControl,
+  OutlinedInput,
   CircularProgress, // MUI Loader component
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import {
+  jobTitleOptions,
+  notificationPreferencesOptions,
+  regionOptions,
+  teamSizeOptions,
+  timeZoneOptions,
+} from "./selectOptions"; // Import options
+import { useTheme } from "@mui/material/styles";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+function getStyles(name, selectedNames, theme) {
+  return {
+    fontWeight:
+      selectedNames.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
 const KycForm = () => {
+  const theme = useTheme();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    role: "",
     companyName: "",
-    teamSize: "",
+    phoneNumber: "",
+    teamSize: [],
+    jobTitle: [],
+    notificationPreferences: [],
+    region: [],
+    timeZone: [],
+    postalCode: "",
+    address: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -78,7 +114,10 @@ const KycForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -112,9 +151,15 @@ const KycForm = () => {
         setFormData({
           firstName: "",
           lastName: "",
-          role: "",
           companyName: "",
-          teamSize: "",
+          phoneNumber: "",
+          teamSize: [],
+          jobTitle: [],
+          notificationPreferences: [],
+          region: [],
+          timeZone: [],
+          postalCode: "",
+          address: "",
         });
         setTimeout(() => {
           navigate("/Console"); // Redirect to Console page after success
@@ -157,12 +202,11 @@ const KycForm = () => {
   }
 
   return (
-    <Box className="flex flex-col items-center justify-center min-h-screen bg-gray-600 p-6">
-      <Box className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
-        <h1 className="text-orange-600 font-bold mb-4 text-center text-3xl underline">
+    <Box className="flex flex-col items-center justify-center min-h-screen bg-gray-800 p-6">
+      <Box className="bg-white rounded-lg shadow-lg max-w-xl p-6">
+        <h1 className="text-orange-600 font-bold mt-4 mb-6 text-center text-3xl underline">
           KYC Form
         </h1>
-        {/* Loader and form display logic */}
         {loading ? (
           <Box
             display="flex"
@@ -173,75 +217,292 @@ const KycForm = () => {
             <CircularProgress /> {/* MUI Circular Loader */}
           </Box>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <TextField
               label="First Name"
               variant="outlined"
               fullWidth
-              margin="normal"
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
               required
+              InputProps={{
+                style: {
+                  fontWeight: "bold", // Make the input text bold
+                },
+              }}
+              InputLabelProps={{
+                style: {
+                  fontWeight: "bold", // Make the label text bold
+                },
+              }}
             />
+
             <TextField
               label="Last Name"
               variant="outlined"
               fullWidth
-              margin="normal"
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
               required
+              InputProps={{
+                style: {
+                  fontWeight: "bold", // Make the input text bold
+                },
+              }}
+              InputLabelProps={{
+                style: {
+                  fontWeight: "bold", // Make the label text bold
+                },
+              }}
             />
 
-            {/* Role Dropdown */}
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="role-label">Role</InputLabel>
-              <Select
-                labelId="role-label"
-                id="role"
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                required
-              >
-                <MenuItem value="Developer">Developer</MenuItem>
-                <MenuItem value="Manager">Manager</MenuItem>
-                <MenuItem value="Designer">Designer</MenuItem>
-                <MenuItem value="QA Engineer">QA Engineer</MenuItem>
-                <MenuItem value="Product Owner">Product Owner</MenuItem>
-              </Select>
-            </FormControl>
-
+            {/* complany name */}
             <TextField
               label="Company Name"
               variant="outlined"
               fullWidth
-              margin="normal"
               name="companyName"
               value={formData.companyName}
               onChange={handleChange}
               required
+              InputProps={{
+                style: {
+                  fontWeight: "bold", // Make the input text bold
+                },
+              }}
+              InputLabelProps={{
+                style: {
+                  fontWeight: "bold", // Make the label text bold
+                },
+              }}
+            />
+
+            {/* phoneNumber */}
+            <TextField
+              label="Phone number "
+              variant="outlined"
+              fullWidth
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              required
+              InputProps={{
+                style: {
+                  fontWeight: "bold", // Make the input text bold
+                },
+              }}
+              InputLabelProps={{
+                style: {
+                  fontWeight: "bold", // Make the label text bold
+                },
+              }}
             />
 
             {/* Team Size Dropdown */}
             <FormControl fullWidth margin="normal">
-              <InputLabel id="teamSize-label">Team Size</InputLabel>
+              <InputLabel id="teamSize-label" style={{ fontWeight: "bold" }}>
+                Team Size
+              </InputLabel>
               <Select
                 labelId="teamSize-label"
                 id="teamSize"
                 name="teamSize"
                 value={formData.teamSize}
                 onChange={handleChange}
-                required
+                input={
+                  <OutlinedInput
+                    label="Team Size"
+                    style={{ fontWeight: "bold" }}
+                  />
+                }
+                MenuProps={MenuProps}
               >
-                <MenuItem value="1-10">1-10</MenuItem>
-                <MenuItem value="11-50">11-50</MenuItem>
-                <MenuItem value="51-100">51-100</MenuItem>
-                <MenuItem value="100+">100+</MenuItem>
+                {teamSizeOptions.map((option) => (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                    style={getStyles(option.value, [formData.teamSize], theme)}
+                  >
+                    {option.label}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
+
+            {/* Job Title Dropdown */}
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="job-title " style={{ fontWeight: "bold" }}>
+                Job Title{" "}
+              </InputLabel>
+              <Select
+                labelId="job-title"
+                id="jobTitle"
+                name="jobTitle"
+                value={formData.jobTitle}
+                onChange={handleChange}
+                input={
+                  <OutlinedInput
+                    label="Job Title"
+                    style={{ fontWeight: "bold" }}
+                  />
+                }
+                MenuProps={MenuProps}
+              >
+                {jobTitleOptions.map((option) => (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                    style={getStyles(option.value, [formData.jobTitle], theme)}
+                  >
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {/* Notification Preferences Dropdown */}
+            <FormControl fullWidth margin="normal">
+              <InputLabel
+                id="notification-level"
+                style={{ fontWeight: "bold" }}
+              >
+                Notification Preferences
+              </InputLabel>
+              <Select
+                labelId="notification-level"
+                id="notificationPreferences"
+                name="notificationPreferences"
+                value={formData.notificationPreferences}
+                onChange={handleChange}
+                input={
+                  <OutlinedInput
+                    label="Notification Preferences"
+                    style={{ fontWeight: "bold" }}
+                  />
+                }
+                MenuProps={MenuProps}
+              >
+                {notificationPreferencesOptions.map((option) => (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                    style={getStyles(
+                      option.value,
+                      [formData.notificationPreferences],
+                      theme
+                    )}
+                  >
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {/* Region Dropdown */}
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="region-level" style={{ fontWeight: "bold" }}>
+                Region
+              </InputLabel>
+              <Select
+                labelId="region-level"
+                id="region"
+                name="region"
+                value={formData.region}
+                onChange={handleChange}
+                input={
+                  <OutlinedInput
+                    label="Region"
+                    style={{ fontWeight: "bold" }}
+                  />
+                }
+                MenuProps={MenuProps}
+              >
+                {regionOptions.map((option) => (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                    style={getStyles(option.value, [formData.region], theme)}
+                  >
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {/* Time Zone Dropdown */}
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="TimeZone-level" style={{ fontWeight: "bold" }}>
+                Time Zone
+              </InputLabel>
+              <Select
+                labelId="timeZone-level"
+                id="timeZone"
+                name="timeZone"
+                value={formData.timeZone}
+                onChange={handleChange}
+                input={
+                  <OutlinedInput
+                    label="TimeZone"
+                    style={{ fontWeight: "bold" }}
+                  />
+                }
+                MenuProps={MenuProps}
+              >
+                {timeZoneOptions.map((option) => (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                    style={getStyles(option.value, [formData.timeZone], theme)}
+                  >
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {/* postalCode */}
+            <TextField
+              label="Postal Code"
+              variant="outlined"
+              fullWidth
+              name="postalCode"
+              value={formData.postalCode}
+              onChange={handleChange}
+              required
+              InputProps={{
+                style: {
+                  fontWeight: "bold", // Make the input text bold
+                },
+              }}
+              InputLabelProps={{
+                style: {
+                  fontWeight: "bold", // Make the label text bold
+                },
+              }}
+            />
+            <TextField
+              label="Address"
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={3}
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+              InputProps={{
+                style: {
+                  fontWeight: "bold", // Make the input text bold
+                },
+              }}
+              InputLabelProps={{
+                style: {
+                  fontWeight: "bold", // Make the label text bold
+                },
+              }}
+            />
 
             {errorMessage && (
               <Box className="mt-2 text-red-600 text-center">
@@ -254,15 +515,16 @@ const KycForm = () => {
                 {successMessage}
               </Box>
             )}
-
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className="mt-4 bg-orange-600 hover:bg-orange-700 mx-auto"
-            >
-              Submit
-            </Button>
+            <div className="flex justify-center items-center">
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className="mt-4 bg-orange-600 hover:bg-orange-700"
+              >
+                Submit
+              </Button>
+            </div>
           </form>
         )}
       </Box>
