@@ -90,7 +90,7 @@ fun emailAsOtpTemplate(otp: String): String {
             <div class="footer">
                 &copy; 2024 MetricX. All rights reserved.
                 <div class="address">
-                    135 AC Garden 4th Cross Lalbagh Road Bengaluru 560027
+                    # 135 3rd floor  AC Garden 4th Cross Lalbagh Road Bengaluru 560027
                 </div>
             </div>
         </div>
@@ -285,7 +285,7 @@ fun emailAsGreetingTemplate(name: String): String {
             <div class="footer">
                 &copy; 2024 MetricX. All rights reserved.
                 <div class="address">
-                    135 AC Garden 4th Cross Lalbagh Road Bengaluru 560027
+                   # 135 3rd floor  AC Garden 4th Cross Lalbagh Road Bengaluru 560027
                 </div>
             </div>
         </div>
