@@ -1,9 +1,6 @@
 package example.com.config
 
-import example.com.data.repository.entity.KYC
-import example.com.data.repository.entity.Otps
-import example.com.data.repository.entity.Tokens
-import example.com.data.repository.entity.Users
+import example.com.data.repository.entity.*
 import io.github.cdimascio.dotenv.Dotenv
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
@@ -24,7 +21,14 @@ fun Application.configureDatabase() {
             Users,
             Tokens,
             Otps,
-            KYC
+            KYC,
+            Clusters,
+            Websites,
+            WebsiteHealthLogs,
+            EscalationTrees,
+            EscalationLevels,
+            Contacts,
+            Notifications
         )
     }
 }
