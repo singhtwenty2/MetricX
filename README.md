@@ -2,6 +2,8 @@
 
 Welcome to the MetricX repository! This project is a real-time website analytics and uptime monitoring platform, leveraging modern web and mobile technologies to provide accurate performance tracking and instant issue notifications.
 
+![Ongoing Project](https://img.shields.io/badge/Status-Ongoing-blue?style=flat-square)
+
 ## Table of Contents
 
 [![Technologies Used](https://img.shields.io/badge/Technologies%20Used-4CAF50?style=flat-square)](#technologies-used)  
@@ -56,5 +58,5 @@ To set up this project locally, follow these steps:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/metricx.git
+   git clone https://github.com/singhtwenty2/metricx.git
    cd metricx
