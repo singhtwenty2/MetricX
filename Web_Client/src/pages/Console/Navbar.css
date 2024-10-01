@@ -1,0 +1,37 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 5px 20px;
+  border-radius: 50px;
+}
+.searchBox input {
+  padding: 3px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: black;
+  font-size: 18px;
+  max-width: 250px;
+}
+.searchBox input::placeholder {
+  color: black;
+}
+
+/* Navbar.css */
+.navbar-container {
+  position: relative; /* Needed for sticky positioning */
+}
+
+.navbar {
+  position: sticky; /* Keep the navbar at the top */
+  top: 0; /* Stick to the top */
+  z-index: 10; /* Make sure it stays above other content */
+  background-color: #0e0e0e; /* Ensure the background matches */
+}

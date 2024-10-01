@@ -1,7 +1,30 @@
+// // src/pages/LogoutPage.js
+// import React from "react";
+// import { useNavigate } from "react-router-dom";
+
+// const LogoutPage = () => {
+//   const navigate = useNavigate();
+
+//   const handleLogout = () => {
+//     // Perform logout logic here
+//     // For now, we simply redirect to the login page
+//     navigate("/");
+//   };
+
+//   return (
+//     <div>
+//       <h1>Are you sure you want to log out?</h1>
+//       <button onClick={handleLogout}>Log Out</button>
+//     </div>
+//   );
+// };
+
+// export default LogoutPage;
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Console = () => {
+const LogoutPage = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -25,4 +48,4 @@ const Console = () => {
   );
 };
 
-export default Console;
+export default LogoutPage;

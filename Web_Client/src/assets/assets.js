@@ -15,6 +15,11 @@ import annimation1 from "./videos/Animation-1.gif";
 import Page404 from "./videos/outcrowd.gif";
 import google from "./google-48.png";
 import github_50 from "./github-50.png";
+import logowhite from "./logo-transparent-png.png";
+import day from "./day.png";
+import profileDark from "./profileDark.png";
+import SearchBlack from "./search-b.png";
+import notificationNight from "./notificationNight.png";
 
 import x6 from "./x6.png";
 
@@ -36,6 +41,13 @@ const assets = {
   google,
   github_50,
   Page404,
+
+  // console page
+  logowhite,
+  day,
+  profileDark,
+  SearchBlack,
+  notificationNight,
 };
 
 export default assets;
