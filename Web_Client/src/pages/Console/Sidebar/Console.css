@@ -1,0 +1,22 @@
+.min-h-screen {
+  min-height: 100vh; /* Full viewport height */
+}
+
+.flex-1 {
+  flex: 1; /* Allow this div to grow and fill available space */
+}
+
+.bg-slate-300 {
+  background-color: #e5e7eb; /* Example background color */
+}
+
+.overflow-y-auto {
+  overflow-y: auto; /* Allow vertical scrolling */
+}
+.sidebar {
+  transition: width 0.5s;
+}
+
+.main-content {
+  transition: margin-left 0.5s;
+}
