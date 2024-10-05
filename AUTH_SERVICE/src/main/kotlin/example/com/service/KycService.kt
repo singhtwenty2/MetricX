@@ -44,6 +44,8 @@ class KycService(
             is RecordCreationErrorHandler.Error -> {
                 false
             }
+
+            is RecordCreationErrorHandler.NotFound -> TODO()
         }
     }
 

@@ -5,6 +5,7 @@ val postgres_version: String by project
 val h2_version: String by project
 val exposed_version: String by project
 val commons_codec_version: String by project
+val ktor_version: String by project
 
 plugins {
     kotlin("jvm") version "2.0.10"
@@ -53,6 +54,12 @@ dependencies {
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     // JDBC connector
     runtimeOnly("mysql:mysql-connector-java:8.0.28")
+    // CIO client
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-logging:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation:2.0.0")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.0")
 }
 
 tasks.jar {

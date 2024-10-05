@@ -32,6 +32,7 @@ class ClusterService(
             is RecordCreationErrorHandler.Success -> true
             is RecordCreationErrorHandler.AlreadyExists -> false
             is RecordCreationErrorHandler.Error -> false
+            is RecordCreationErrorHandler.NotFound -> TODO()
         }
     }
 
@@ -71,6 +72,7 @@ class ClusterService(
             is RecordCreationErrorHandler.Success -> true
             is RecordCreationErrorHandler.AlreadyExists -> false
             is RecordCreationErrorHandler.Error -> false
+            is RecordCreationErrorHandler.NotFound -> TODO()
         }
     }
 
@@ -84,6 +86,7 @@ class ClusterService(
             is RecordCreationErrorHandler.Success -> true
             is RecordCreationErrorHandler.AlreadyExists -> false
             is RecordCreationErrorHandler.Error -> false
+            is RecordCreationErrorHandler.NotFound -> TODO()
         }
     }
 }
