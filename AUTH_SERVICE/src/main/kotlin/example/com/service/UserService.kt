@@ -21,7 +21,7 @@ class UserService(
     private val hashingService: HashingService,
     private val otpService: OtpService
 ) {
-    fun createUser(requestDTO: SignupDTO): Boolean {
+    suspend fun createUser(requestDTO: SignupDTO): Boolean {
         if (
             requestDTO.password.length < 6 ||
             requestDTO.password.length > 20
