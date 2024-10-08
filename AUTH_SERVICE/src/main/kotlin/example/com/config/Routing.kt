@@ -3,11 +3,13 @@ package example.com.config
 import example.com.controller.AuthController
 import example.com.controller.ClusterController
 import example.com.controller.KycController
+import example.com.controller.WebsiteController
 import example.com.data.dto.response.MessageDTO
 import example.com.data.repository.dao.*
 import example.com.routing.authRoutes
 import example.com.routing.clusterRoutes
 import example.com.routing.kycRoutes
+import example.com.routing.websiteRoutes
 import example.com.security.hashing.SHA256HashingService
 import example.com.security.token.JwtConfig
 import example.com.service.*
@@ -58,7 +60,11 @@ fun Application.configureRouting() {
     val clusterDAO = ClusterDAO
     val clusterService = ClusterService(clusterDAO)
     val clusterController = ClusterController(clusterService)
+    val websiteDAO = WebsiteDAO
+    val websiteService = WebsiteService(websiteDAO)
+    val websiteController = WebsiteController(websiteService)
     authRoutes(authController)
     kycRoutes(kycController)
     clusterRoutes(clusterController)
+    websiteRoutes(websiteController)
 }

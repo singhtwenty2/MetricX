@@ -1,9 +1,9 @@
-package example.com.data.dto.request
+package example.com.data.dto.internal
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class WebsiteDetailsDTO(
+data class InternalWebsiteDetailsDTO(
     val clusterId: String,
     val websiteUrl: String,
     val apiKey: String? = null,

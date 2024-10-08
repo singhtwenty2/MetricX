@@ -43,7 +43,8 @@ object ClusterDAO {
         return transaction {
             Clusters.selectAll().where {
                 Clusters.userId eq userId
-            }.map {
+            }.orderBy(Clusters.updatedAt, SortOrder.DESC).
+            map {
                 ClusterDTO(
                     it[Clusters.clusterId].toString(),
                     it[Clusters.clusterName],
