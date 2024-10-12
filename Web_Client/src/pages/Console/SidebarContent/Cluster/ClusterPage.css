@@ -1,0 +1,14 @@
+.tree-container {
+  width: 100%;
+  height: 500px;
+}
+
+.react-d3-tree-container {
+  overflow: hidden;
+  background-color: #f9fafb;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: space-between;
+}

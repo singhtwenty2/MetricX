@@ -21,7 +21,7 @@ import AuthGuard from "./Components/AuthGuard";
 // Import Console and its components
 import Console from "./pages/Console/Sidebar/Console";
 import DashboardHome from "./pages/Console/SidebarContent/DashboardHome";
-import ClusterPage from "./pages/Console/SidebarContent/ClusterPage";
+import ClusterPage from "./pages/Console/SidebarContent/Cluster/ClusterPage";
 import EscalationPage from "./pages/Console/SidebarContent/EscalationPage";
 import AnalyticsPage from "./pages/Console/SidebarContent/AnalyticsPage";
 import AlertHistoryPage from "./pages/Console/SidebarContent/AlertHistoryPage";
@@ -68,6 +68,7 @@ function App() {
               </ProtectedRoute>
             }
           >
+            {/* <Route path="/console" element={<Console />}> */}
             {/* Default Dashboard Home route */}
             <Route index element={<DashboardHome />} />
             <Route path="cluster" element={<ClusterPage />} />

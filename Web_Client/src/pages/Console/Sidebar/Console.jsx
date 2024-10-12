@@ -94,7 +94,7 @@ const Console = () => {
 
         {/* Main Content */}
         <div
-          className="main-content flex-1 p-6 bg-white text-gray-900 text-xl font-semibold overflow-y-auto"
+          className="main-content flex-1  bg-white text-gray-900 text-xl font-semibold overflow-y-auto"
           style={{
             marginLeft: open ? "18rem" : "4rem", // Adjust margin based on sidebar width
             transition: "margin-left 0.5s", // Smooth transition
