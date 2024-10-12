@@ -30,7 +30,7 @@ class OtpService(
             .encodeToString(md.digest(otp.toByteArray()))
     }
 
-    fun saveOtpAndSendEmail(
+    suspend fun saveOtpAndSendEmail(
         userEmail: String,
         otp: String
     ): Boolean {

@@ -1,68 +1,71 @@
 package example.com.service
 
-import com.sendgrid.Method
-import com.sendgrid.Request
-import com.sendgrid.SendGrid
-import com.sendgrid.helpers.mail.Mail
-import com.sendgrid.helpers.mail.objects.Content
-import com.sendgrid.helpers.mail.objects.Email
-import emailAsGreetingTemplate
-import emailAsOtpTemplate
+import example.com.data.dto.remote.GreetingEmailRequest
+import example.com.data.dto.remote.OtpEmailRequest
 import io.github.cdimascio.dotenv.Dotenv
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.util.InternalAPI
+import kotlinx.serialization.json.Json
 
+@OptIn(InternalAPI::class)
 class EmailService {
 
     private val dotenv = Dotenv.configure().filename(".env").load()!!
-    private val APIKEY = dotenv["SENDGRID_API_KEY"]!!
-    private val FROM_EMAIL = dotenv["SENDER_EMAIL"]!!
+    private val SPRING_EMAIL_SERVER = dotenv["SPRING_EMAIL_SERVER"]!!
 
-    private val sendGrid = SendGrid(APIKEY)
-
-    fun sendOtpAsEmail(
-        toEmail: String,
-        otp: String
-    ): Boolean {
-        val fromEmail = Email(FROM_EMAIL)
-        val to = Email(toEmail)
-        val subject = "Your OTP for login to MetricX"
-        val htmlContent = emailAsOtpTemplate(otp)
-        val otpEmailContent = Content("text/html", htmlContent)
-        val mail = Mail(fromEmail, subject, to, otpEmailContent)
-        val request = Request()
-        request.method = Method.POST
-        request.endpoint = "mail/send"
-        request.body = mail.build()
-
-        return try {
-            sendGrid.api(request)
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
+    private val client = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json(Json {
+                prettyPrint = true
+                isLenient = true
+                ignoreUnknownKeys = true
+            })
         }
     }
 
-    fun sendGreetingEmail(
-        toEmail: String,
-        name: String
+    suspend fun sendOtpAsEmail(
+        receiverEmail: String, otp: String
     ): Boolean {
-        val fromEmail = Email(FROM_EMAIL)
-        val to = Email(toEmail)
-        val subject = "Welcome to MetricX"
-        val htmlContent = emailAsGreetingTemplate(name)
-        val greetEmailContent = Content("text/html", htmlContent)
-        val mail = Mail(fromEmail, subject, to, greetEmailContent)
-        val request = Request()
-        request.method = Method.POST
-        request.endpoint = "mail/send"
-        request.body = mail.build()
-
-        return try {
-            sendGrid.api(request)
-            true
+        try {
+            val response: HttpResponse = client.post("$SPRING_EMAIL_SERVER/email/send-otp") {
+                contentType(ContentType.Application.Json)
+                setBody(
+                    OtpEmailRequest(
+                        receiverEmail = receiverEmail, subject = "OTP for your account", otp = otp
+                    )
+                )
+            }
+            return response.status.value == 200
         } catch (e: Exception) {
             e.printStackTrace()
-            false
+            return false
+        }
+    }
+
+    suspend fun sendGreetingEmail(
+        toEmail: String, name: String
+    ): Boolean {
+        try {
+            val response: HttpResponse = client.post("$SPRING_EMAIL_SERVER/email/send-greetings") {
+                contentType(ContentType.Application.Json)
+                setBody(
+                    GreetingEmailRequest(
+                        receiverEmail = toEmail, subject = "Greetings from MetricX.", name = name
+                    )
+                )
+            }
+            return response.status.value == 200
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
         }
     }
 }
